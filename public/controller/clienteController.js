@@ -31,13 +31,15 @@ const cadastrarCliente = async (req, res) => {
     const { primeiroNome } = req.body;
     const { sobrenome } = req.body;
     const { email } = req.body;
-    const { cpf } = req.body;
+    const { cpfcnpj } = req.body;
     const { rua } = req.body;
     const { numero } = req.body;
     const { bairro } = req.body;
-    const { estado } = req.body;
+    const { municipio } = req.body;
+    const { uf } = req.body;
     const { cep } = req.body;
     const { senha } = req.body;
+    const { isFornecedor } = req.body;
 
     try {
 
@@ -54,13 +56,16 @@ const cadastrarCliente = async (req, res) => {
         if (!tableExists) {
             await criarTabelaCliente();
         }
+
         const query = `
-            INSERT INTO cliente (primeiro_nome, sobrenome, email, cpf, rua, numero, bairro, estado, cep, senha)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            INSERT INTO cliente (primeiro_nome, sobrenome, email, cpfcnpj, rua, numero, bairro, municipio, uf, cep, senha, isFornecedor)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         `;
-        const values = [primeiroNome, sobrenome, email, cpf, rua, numero, bairro, estado, cep, senha];
+        const values = [primeiroNome, sobrenome, email, cpfcnpj, rua, numero, bairro, municipio, uf, cep, senha, isFornecedor];
 
         await pool.query(query, values);
+        console.log('Conta criada comsucesso!');
+        
         res.status(201).json({ message: 'Conta criada com sucesso.' });
     } catch (error) {
         console.log(error)
@@ -77,13 +82,15 @@ async function criarTabelaCliente() {
                 primeiro_nome VARCHAR(50) NOT NULL,
                 sobrenome VARCHAR(50) NOT NULL,
                 email VARCHAR(50) NOT NULL,
-                cpf VARCHAR(11) NOT NULL,
+                cpfcnpj VARCHAR(11) NOT NULL,
                 rua VARCHAR(50) NOT NULL,
                 numero VARCHAR(10) NOT NULL, 
                 bairro VARCHAR(50) NOT NULL,
-                estado VARCHAR(2) NOT NULL,
+                municipio VARCHAR(50) NOT NULL,
+                uf VARCHAR(2) NOT NULL,
                 cep VARCHAR(8) NOT NULL, 
-                senha VARCHAR(8)
+                senha VARCHAR(8),
+                isFornecedor boolean NOT NULL
             );
         `;
         await pool.query(createTableQuery);
@@ -93,6 +100,5 @@ async function criarTabelaCliente() {
         throw error;
     }
 }
-
 
 module.exports = { cadastrarCliente, loginCliente };

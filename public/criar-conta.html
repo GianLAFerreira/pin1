@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IBuy</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+
+    <body class="d-flex align-items-center justify-content-center">
+        <section class="order-form m-4">
+            <div class="container pt-4">
+                <div class="row">
+                    <div class="col-12 px-4">
+                        <h1 class="display-4 text-center">Cadastro de Usuário</h1>
+                        <p class="text-center text-muted">
+                            <small>Por favor insira os dados para o cadastro</small>
+                        </p>
+                    </div>
+                    <form id="form-cadastro">
+                        <div id="messages"></div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="isFornecedor" value="false">
+                            <label class="form-check-label" for="isFornecedor">Fornecedor</label>
+                        </div>
+
+                        <!-- Email input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="primeiro-nome">* Primeiro nome</label>
+                            <input type="text" id="primeiro-nome" class="form-control" maxlength="50" required="true"/>
+                        </div>
+
+                        <!-- Password input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="sobrenome">* Sobrenome</label>
+                            <input type="text" id="sobrenome" class="form-control" maxlength="50"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="email">* Email</label>
+                            <input type="email" id="email" placeholder="example@test.com" class="form-control" maxlength="50"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="cpfcnpj">* CPF/CNPJ</label>
+                            <input type="text" id="cpfcnpj" placeholder="CPF" class="form-control" maxlength="18"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="rua">* Rua</label>
+                            <input type="text" id="rua" class="form-control" maxlength="50"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="numero">* Número</label>
+                            <input type="number" id="numero" class="form-control" maxlength="10"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="bairro">* Bairro</label>
+                            <input type="text" id="bairro" class="form-control" maxlength="50"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="municipio">* Município</label>
+                            <input type="text" id="municipio" class="form-control" maxlength="50"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="uf">* UF</label>
+                            <select id="uf" class="form-select">
+                                <option value="">Selecione a UF</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="cep">* CEP</label>
+                            <input type="text" id="cep" class="form-control" maxlength="8"/>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <label class="form-label" for="senha">* Senha</label>
+                            <input type="password" id="senha" class="form-control" maxlength="8"/>
+                        </div>
+
+                        <!-- Submit button -->
+                        <div class="d-grid text-center">
+                            <a id="btn-login" class="btn btn-dark btn-active-secondary" data-mdb-ripple-init="true">Autenticar-se</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            document.getElementById('isFornecedor').addEventListener('change', function (e) {
+                const documentoInput = document.getElementById('cpfcnpj');
+                const isFornecedor = e.target.checked;
+
+                if (! isFornecedor) {
+                    documentoInput.placeholder = 'CPF';
+                } else {
+                    documentoInput.placeholder = 'CNPJ';
+                }
+            });
+        </script>
+
+        <script>
+
+            window.onload = function () {
+                document.getElementById('messages').style.display = 'none';
+            };
+
+
+            document.getElementById('btn-login').addEventListener('click', async () => {
+
+                const primeiroNome = document.getElementById('primeiro-nome').value;
+                const sobrenome = document.getElementById('sobrenome').value;
+                const email = document.getElementById('email').value;
+                const cpfcnpj = document.getElementById('cpfcnpj').value;
+                const rua = document.getElementById('rua').value;
+                const numero = document.getElementById('numero').value;
+                const bairro = document.getElementById('bairro').value;
+                const municipio = document.getElementById('municipio').value;
+                const uf = document.getElementById('uf').value;
+                const cep = document.getElementById('cep').value;
+                const senha = document.getElementById('senha').value;
+                const isFornecedorCheckbox = document.getElementById('isFornecedor');
+                const isFornecedor = isFornecedorCheckbox.checked;
+
+                const data = {
+                    primeiroNome,
+                    sobrenome,
+                    email,
+                    cpfcnpj,
+                    rua,
+                    numero,
+                    bairro,
+                    municipio,
+                    uf,
+                    cep,
+                    senha,
+                    isFornecedor
+                };
+
+                const msgs = validarCampos(data);
+
+                if (msgs.length > 0) {
+                    const errorMessage = msgs.join('<br>'); // Use <br> para que cada mensagem apareça em uma linha separada
+                    mensagemTelaErro(errorMessage);
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/cliente', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const responseData = await response.json();
+
+                    document.getElementById('messages').textContent = 'Cadastro concluído com sucesso.';
+                    document.getElementById('messages').classList.add('alert', 'alert-success');
+
+                    document.getElementById('form-cadastro').reset();
+                } catch (error) {
+                    console.error('Erro:', error);
+                }
+            });
+
+            function validarCampos(data) {
+                const mensagens = [];
+
+                if (! data.primeiroNome) {
+                    mensagens.push('O campo Primeiro Nome é obrigatório');
+                }
+
+                if (! data.sobrenome) {
+                    mensagens.push('O campo Sobrenome é obrigatório');
+                }
+
+                if (! data.email) {
+                    mensagens.push('O campo Email é obrigatório');
+                }
+
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (! emailRegex.test(data.email)) {
+                    mensagens.push('O campo Email não está em um formato válido');
+                }
+
+                if (! data.cpfcnpj) {
+                    mensagens.push('O campo CPF é obrigatório');
+                }
+
+                if (! data.rua) {
+                    mensagens.push('O campo Rua é obrigatório');
+                }
+
+                if (! data.numero) {
+                    mensagens.push('O campo Número é obrigatório');
+                }
+
+                if (! data.bairro) {
+                    mensagens.push('O campo Bairro é obrigatório');
+                }
+
+                if (! data.municipio) {
+                    mensagens.push('O campo Município é obrigatório');
+                }
+
+                if (! data.uf) {
+                    mensagens.push('O campo UF é obrigatório');
+                }
+
+                if (! data.cep) {
+                    mensagens.push('O campo CEP é obrigatório');
+                }
+
+                if (! data.senha) {
+                    mensagens.push('O campo Senha é obrigatório');
+                }
+
+                return mensagens;
+            }
+
+            function mensagemTelaErro(mensagem) {
+                document.getElementById('messages').innerHTML = mensagem;
+                document.getElementById('messages').style.display = 'block';
+                document.getElementById('messages').classList.add('alert', 'alert-danger');
+            }
+        </script>
+    </body>
+</html>
