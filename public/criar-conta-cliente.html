@@ -22,7 +22,7 @@
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="primeiro-nome">* Primeiro nome</label>
-                        <input type="text" id="primeiro-nome" class="form-control" maxlength="50" required="true"/>
+                        <input type="text" id="primeiro-nome" class="form-control" maxlength="50" required="true" />
                     </div>
 
                     <!-- Password input -->
@@ -33,17 +33,17 @@
 
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="email-cliente">* Email</label>
-                        <input type="text" id="email-cliente" class="form-control" maxlength="50"/>
+                        <input type="text" id="email-cliente" class="form-control" maxlength="50" />
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="cpf-cliente">* CPF</label>
-                        <input type="text" id="cpf-cliente" class="form-control" maxlength="11"/>
+                        <input type="text" id="cpf-cliente" class="form-control" maxlength="11" />
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="rua-cliente">* Rua</label>
-                        <input type="text" id="rua-cliente" class="form-control" maxlength="50"/>
+                        <input type="text" id="rua-cliente" class="form-control" maxlength="50" />
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
@@ -53,7 +53,7 @@
 
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="bairro-cliente">* Bairro</label>
-                        <input type="text" id="bairro-cliente" class="form-control" maxlength="50"/>
+                        <input type="text" id="bairro-cliente" class="form-control" maxlength="50" />
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
@@ -63,7 +63,7 @@
 
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="cep-cliente">* CEP</label>
-                        <input type="text" id="cep-cliente" class="form-control" maxlength="8"/>
+                        <input type="text" id="cep-cliente" class="form-control" maxlength="8" />
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
@@ -80,62 +80,117 @@
             </div>
         </div>
     </section>
-    <script>  
-    
-    document.getElementById('btn-login-cliente').addEventListener('click', async () => {
+    <script>
         
-        const primeiroNome = document.getElementById('primeiro-nome').value;
-        const sobrenome =  document.getElementById('sobrenome-cliente').value;
-        const email =  document.getElementById('email-cliente').value;
-        const cpf =  document.getElementById('cpf-cliente').value;
-        const rua =  document.getElementById('rua-cliente').value;
-        const numero =  document.getElementById('numero-cliente').value;
-        const bairro =  document.getElementById('bairro-cliente').value;
-        const estado =  document.getElementById('estado-cliente').value;
-        const cep = document.getElementById('cep-cliente').value;
-        const senha = document.getElementById('senha-cliente').value;
-        
-        if (!primeiroNome || !sobrenome || !email || !cpf || !rua || !numero || !bairro || !estado || !cep || !senha) {
-            document.getElementById('messages').textContent = 'Por favor, preencha todos os campos obrigatórios.';
+        window.onload = function() {
+    document.getElementById('messages').style.display = 'none';
+};
+
+
+        document.getElementById('btn-login-cliente').addEventListener('click', async () => {
+
+            const primeiroNome = document.getElementById('primeiro-nome').value;
+            const sobrenome = document.getElementById('sobrenome-cliente').value;
+            const email = document.getElementById('email-cliente').value;
+            const cpf = document.getElementById('cpf-cliente').value;
+            const rua = document.getElementById('rua-cliente').value;
+            const numero = document.getElementById('numero-cliente').value;
+            const bairro = document.getElementById('bairro-cliente').value;
+            const estado = document.getElementById('estado-cliente').value;
+            const cep = document.getElementById('cep-cliente').value;
+            const senha = document.getElementById('senha-cliente').value;
+
+            const data = {
+                primeiroNome,
+                sobrenome,
+                email,
+                cpf,
+                rua,
+                numero,
+                bairro,
+                estado,
+                cep,
+                senha
+            };
+
+            const msgs = validarCampos(data);
+
+            if (msgs.length > 0) {
+                const errorMessage = msgs.join('<br>'); // Use <br> para que cada mensagem apareça em uma linha separada
+                mensagemTelaErro(errorMessage);
+                return;
+            }
+
+            try {
+                const response = await fetch('/cliente', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                const responseData = await response.json();
+
+                document.getElementById('messages').textContent = 'Cadastro concluído com sucesso.';
+                document.getElementById('messages').classList.add('alert', 'alert-success');
+
+                document.getElementById('cliente-form').reset();
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+
+        function validarCampos(data) {
+            const mensagens = [];
+
+            if (!data.primeiroNome) {
+                mensagens.push('O campo Primeiro Nome é obrigatório');
+            }
+
+            if (!data.sobrenome) {
+                mensagens.push('O campo Sobrenome é obrigatório');
+            }
+
+            if (!data.email) {
+                mensagens.push('O campo Email é obrigatório');
+            }
+
+            if (!data.cpf) {
+                mensagens.push('O campo CPF é obrigatório');
+            }
+
+            if (!data.rua) {
+                mensagens.push('O campo Rua é obrigatório');
+            }
+
+            if (!data.numero) {
+                mensagens.push('O campo Número é obrigatório');
+            }
+
+            if (!data.bairro) {
+                mensagens.push('O campo Bairro é obrigatório');
+            }
+
+            if (!data.estado) {
+                mensagens.push('O campo Estado é obrigatório');
+            }
+
+            if (!data.cep) {
+                mensagens.push('O campo CEP é obrigatório');
+            }
+
+            if (!data.senha) {
+                mensagens.push('O campo Senha é obrigatório');
+            }
+
+            return mensagens;
+        }
+
+        function mensagemTelaErro(mensagem) {
+            document.getElementById('messages').innerHTML = mensagem;
+            document.getElementById('messages').style.display = 'block';
             document.getElementById('messages').classList.add('alert', 'alert-danger');
-            return;
         }
-
-        document.getElementById('messages').classList.remove('alert', 'alert-danger');
-        document.getElementById('messages').textContent = '';
-
-
-        const data = {
-            primeiroNome,
-            sobrenome,
-            email,
-            cpf,
-            rua,
-            numero,
-            bairro,
-            estado,
-            cep,
-            senha
-        };
-
-        try {
-            const response = await fetch('/cliente', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-            const responseData = await response.json();
-            
-            document.getElementById('messages').textContent = 'Cadastro concluído com sucesso.';
-            document.getElementById('messages').classList.add('alert', 'alert-success');
-
-            document.getElementById('cliente-form').reset();
-        } catch (error) {
-            console.error('Erro:', error);
-        }
-    });
 
     </script>
 </body>
