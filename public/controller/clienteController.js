@@ -1,5 +1,31 @@
 const { pool } = require('../../database');
 
+const loginCliente = async (req, res) => {
+    try {
+        const { emailCliente } = req.body;
+        const {  senhaCliente } = req.body;
+        const values = [emailCliente, senhaCliente];
+        
+        const query = `
+        SELECT * FROM cliente WHERE email = $1 AND senha = $2;
+    `;
+
+        // Executando a consulta
+        const result = await pool.query(query, values);
+        
+        // Verificando se o resultado contém pelo menos um registro
+        if (result.rowCount >  0) {
+            res.status(201).json({ message: 'Login realizado com sucesso.' });
+        } else {
+            res.status(401).json({ message: 'Email ou senha incorretos.' });
+        }
+    } catch (error) {
+        console.log(error)
+        console.error('Erro ao cadastrar cliente:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+}
+
 const cadastrarCliente = async (req, res) => {
 
     const { primeiroNome } = req.body;
@@ -69,4 +95,4 @@ async function criarTabelaCliente() {
 }
 
 
-module.exports = { cadastrarCliente };
+module.exports = { cadastrarCliente, loginCliente };

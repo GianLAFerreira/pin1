@@ -18,6 +18,9 @@
                     <p class="text-center text-muted"><small>Por favor faça login para continuar</small></p>
                 </div>
                 <form>
+                    <div id="error-message" style="display: none;">
+                        <!-- A mensagem de erro será inserida aqui -->
+                    </div>
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="email-cliente">Email</label>
                         <input type="email" id="email-cliente" class="form-control" />
@@ -34,10 +37,81 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <p class="text-center text-muted"><small>Ainda não possui uma conta? <a href="criar-conta-cliente.html" class="text-muted">Criar conta</a></small></p>
+                        <p class="text-center text-muted"><small>Ainda não possui uma conta? <a
+                                    href="criar-conta-cliente.html" class="text-muted">Criar conta</a></small></p>
                     </div>
                 </form>
             </div>
         </div>
     </section>
+
+    <script>
+
+        document.getElementById('btn-login-cliente').addEventListener('click', async () => {
+
+            const emailCliente = document.getElementById('email-cliente').value;
+            const senhaCliente = document.getElementById('senha-cliente').value;
+
+            const data = {
+                emailCliente,
+                senhaCliente
+            };
+
+            const msgs = validarCampos(emailCliente, senhaCliente);
+
+            if (msgs.length > 0) {
+                const errorMessage = msgs.join('<br>'); // Use <br> para que cada mensagem apareça em uma linha separada
+                mensagemTelaErro(errorMessage);
+                return;
+            }
+
+
+            try {
+                const response = await fetch('/login-cliente', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Ocorreu um erro durante o login.');
+                }
+
+                const responseData = await response.json();
+               
+                if (response.status === 201) { // Checking for status 201
+                    window.location.href = "http://localhost:3000/home.html";
+                } else {
+                    console.error('Ocorreu um erro durante o login.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+
+
+        function validarCampos(emailCliente, senhaCliente) {
+            const mensagens = [];
+
+            if (!emailCliente) {
+                mensagens.push('O campo email é obrigatório');
+            }
+
+            if (!senhaCliente) {
+                mensagens.push('O campo login é obrigatório');
+            }
+
+            return mensagens;
+        }
+
+        function mensagemTelaErro(mensagem) {
+            document.getElementById('error-message').innerHTML = mensagem;
+            document.getElementById('error-message').style.display = 'block';
+            document.getElementById('error-message').classList.add('alert', 'alert-danger');
+        }
+
+    </script>
 </body>

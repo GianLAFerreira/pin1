@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBuy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body class="align-items-center justify-content-center">
+    <nav class="navbar navbar-dark bg-dark align-top w-100 rounded">
+        <!-- Container para centralizar horizontalmente -->
+        <div class="container d-flex justify-content-center">
+            <div class="align-items-center">
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/home.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/shopping-cart.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/history.png" width="30" height="30" alt="">
+                </a>
+            </div>
+        </div>
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/logout.png" id="modalOpener" width="30" height="30" alt="">
+        </a>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <h1 class="text-center">Lista de mercados disponíveis</h1>
+            <div class="progress">
+                <div class="progress-bar bg-dark" role="progressbar" style="width: 75%" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="d-flex col-12 px-4 gap-4 text-center mt-3" style="margin-left: 19%;">
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/freshmarket.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">FreshMarket</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/supermarket.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">SuperMarket</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/marketshop.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">MarketShop</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 px-4 mt-4">
+                <h1 class="text-center">Destaques</h1>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-dark" role="progressbar" style="width: 50%" aria-valuenow="75"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="d-flex col-12 px-4 gap-4 text-center mt-3" style="margin-left: 19%;">
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/freshmarket.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">FreshMarket</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/supermarket.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">SuperMarket</p>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white text-center rounded" style="width:  16rem;">
+                    <img class="card-img-top d-block mx-auto  w-75 m-4" src="assets/marketshop.png"
+                        alt="Imagem de capa do card">
+                    <div class="card-body">
+                        <p class="card-text">MarketShop</p>
+                    </div>
+                </div>
+            </div>
+            <form id="clienteForm">
+                <!-- Seu formulário aqui -->
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="text-center p-3">
+            © 2024 Copyright
+        </div>
+    </footer>
+
+    <script>
+        // Obtendo referência para a imagem
+        var img = document.getElementById('modalOpener');
+        
+        // Adicionando um evento de clique à imagem
+        img.addEventListener('click', function() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+        });
+
+        // Fechando a modal quando o usuário clicar no botão fechar
+        var closeBtn = document.querySelector('.close');
+        closeBtn.addEventListener('click', function() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        });
+
+        // Fechando a modal quando o usuário clicar fora da modal
+        window.addEventListener('click', function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
