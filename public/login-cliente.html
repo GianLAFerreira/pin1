@@ -65,9 +65,11 @@
                 return;
             }
 
+            document.getElementById('error-message').style.display = 'none';
+
 
             try {
-                const response = await fetch('/login-cliente', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
