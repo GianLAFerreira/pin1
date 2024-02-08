@@ -1,5 +1,25 @@
 const { pool } = require('../../database');
 
+const isFornecedor = async (req, res) => {
+    try {
+        const { cliente_id } = req.body; 
+        
+        const query = `
+            SELECT isfornecedor FROM cliente WHERE id = $1;
+        `;
+
+        const values = [cliente_id];
+        const { rows } = await pool.query(query, values);
+        await pool.query(query, values);
+        res.json(rows);
+    } catch (error) {
+        console.error('Erro ao verificar se é fornecedor:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+};
+
+
+
 const listarProdutos = async (req, res) => {
     try {
         const checkTableQuery = `
@@ -37,7 +57,7 @@ async function criarTabelaProduto() {
                 nome VARCHAR(50) NOT NULL,
                 descricao VARCHAR(400) NOT NULL,
                 valor NUMERIC(10,2),
-                imagem VARCHAR(4000))
+                imagem VARCHAR(4000));
         `;
         await pool.query(createTableQuery);
         console.log('Tabela produto criada com sucesso!');
@@ -45,7 +65,7 @@ async function criarTabelaProduto() {
         console.error('Erro ao criar tabela produto:', error);
         throw error;
     }
-} 
+}
 
 
 const cadastrarProduto = async (req, res) => {
@@ -77,11 +97,11 @@ const cadastrarProduto = async (req, res) => {
             INSERT INTO produto (nome, descricao, valor, imagem)
             VALUES ($1, $2, $3, $4)
         `;
-        const values = [ nome, descricao, valor, url];
+        const values = [nome, descricao, valor, url];
 
         await pool.query(query, values);
         console.log('Produto criado com sucesso!');
-        
+
         res.status(201).json({ message: 'Produto criado com sucesso.' });
     } catch (error) {
         console.log(error)
@@ -90,4 +110,4 @@ const cadastrarProduto = async (req, res) => {
     }
 };
 
-module.exports = { listarProdutos, cadastrarProduto };
+module.exports = { listarProdutos, cadastrarProduto, isFornecedor };

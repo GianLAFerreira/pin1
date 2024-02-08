@@ -20,20 +20,17 @@
                 <a class="navbar-brand" href="carrinho.html">
                     <img src="assets/shopping-cart.png" width="30" height="30" alt="">
                 </a>
-                <a class="navbar-brand" href="home.html">
-                    <img src="assets/history.png" width="30" height="30" alt="">
-                </a>
             </div>
         </div>
         <a class="navbar-brand" href="home.html">
             <img src="assets/logout.png" id="modalOpener" width="30" height="30" alt="">
         </a>
     </nav>
-    
+
     <div class="container mt-4">
         <div class="row">
             <h1 class="text-center">Carrinho</h1>
-            
+
         </div>
     </div>
 
@@ -48,8 +45,9 @@
             </div>
         </div>
 
-        <div class="d-grid text-center" onclick="openPagamento()">
-            <a id="btn-comprar" class="btn btn-dark btn-active-secondary" data-mdb-ripple-init="true">Realizar compra</a>
+        <div id="div-botao-comprar" class="text-center" style="display: none;" onclick="openPagamento()">
+            <a id="btn-comprar" class="btn btn-dark btn-active-secondary" data-mdb-ripple-init="true">Realizar
+                compra</a>
         </div>
     </section>
 
@@ -57,76 +55,82 @@
         function openPagamento() {
             window.location.href = 'pagamento.html';
         }
-         window.onload = async () => {
-        try {
-            const userID = localStorage.getItem('userId')
-            const response = await fetch('/listarCarrinho', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    cliente_id: userID
-                }),
-            });
-            const responseData = await response.json();
-            const listaProdutos = document.getElementById('listaProdutos');
+        window.onload = async () => {
+            try {
+                const userID = localStorage.getItem('userId')
+                const response = await fetch('/listarCarrinho', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cliente_id: userID
+                    }),
+                });
+                const responseData = await response.json();
+                const listaProdutos = document.getElementById('listaProdutos');
 
-            // Iterar sobre os produtos e adicionar cada um ao HTML
-            responseData.forEach(produto => {
-                const col = document.createElement('div');
-                col.className = 'col mb-4';
-
-                const card = document.createElement('div');
-                card.className = 'card text-black h-100';
-                col.appendChild(card);
-
-                const img = document.createElement('img');
-                img.src = produto.imagem;
-                img.className = 'card-img-top';
-                // Estilos inline para limitar a largura da imagem e manter a proporção
-                img.style.height = 'auto'; // Mantém a proporção da imagem
-                card.appendChild(img);
-
-
-                const cardBody = document.createElement('div');
-                cardBody.className = 'card-body d-flex flex-column';
-                card.appendChild(cardBody);
-
-                const title = document.createElement('h5');
-                title.className = 'card-title';
-                title.textContent = produto.nome;
-                cardBody.appendChild(title);
-
-                const description = document.createElement('p');
-                description.className = 'text-muted mb-4';
-                description.textContent = produto.descricao;
-                cardBody.appendChild(description);
-
-                const dFlex = document.createElement('div');
-                dFlex.className = 'd-flex justify-content-between mt-auto';
-                cardBody.appendChild(dFlex);
-
-                const span1 = document.createElement('span');
-                span1.textContent = 'Valor';
-                dFlex.appendChild(span1);
-
-                const span2 = document.createElement('span');
-                span2.textContent = `$${produto.valor}`;
-                dFlex.appendChild(span2);
-
-                const dFlex2 = document.createElement('div');
-                dFlex2.className = 'd-flex justify-content-center mt-auto';
-                cardBody.appendChild(dFlex2);
-
-                listaProdutos.appendChild(col);
-
-                localStorage.setItem('carrinho', JSON.stringify(responseData));
-                    });
-                } catch (error) {
-                    console.error('Erro ao buscar produtos:', error);
+                const divBotaoComprar = document.getElementById("div-botao-comprar");
+                if (responseData.length > 0) {
+                    divBotaoComprar.className = "d-grid";
+                    divBotaoComprar.style.display = "block"; // Exibe o botão se houver itens no carrinho
                 }
-            };
+
+                // Iterar sobre os produtos e adicionar cada um ao HTML
+                responseData.forEach(produto => {
+                    const col = document.createElement('div');
+                    col.className = 'col mb-4';
+
+                    const card = document.createElement('div');
+                    card.className = 'card text-black h-100';
+                    col.appendChild(card);
+
+                    const img = document.createElement('img');
+                    img.src = produto.imagem;
+                    img.className = 'card-img-top';
+                    // Estilos inline para limitar a largura da imagem e manter a proporção
+                    img.style.height = 'auto'; // Mantém a proporção da imagem
+                    card.appendChild(img);
+
+
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'card-body d-flex flex-column';
+                    card.appendChild(cardBody);
+
+                    const title = document.createElement('h5');
+                    title.className = 'card-title';
+                    title.textContent = produto.nome;
+                    cardBody.appendChild(title);
+
+                    const description = document.createElement('p');
+                    description.className = 'text-muted mb-4';
+                    description.textContent = produto.descricao;
+                    cardBody.appendChild(description);
+
+                    const dFlex = document.createElement('div');
+                    dFlex.className = 'd-flex justify-content-between mt-auto';
+                    cardBody.appendChild(dFlex);
+
+                    const span1 = document.createElement('span');
+                    span1.textContent = 'Valor';
+                    dFlex.appendChild(span1);
+
+                    const span2 = document.createElement('span');
+                    span2.textContent = `$${produto.valor}`;
+                    dFlex.appendChild(span2);
+
+                    const dFlex2 = document.createElement('div');
+                    dFlex2.className = 'd-flex justify-content-center mt-auto';
+                    cardBody.appendChild(dFlex2);
+
+                    listaProdutos.appendChild(col);
+
+                    localStorage.setItem('carrinho', JSON.stringify(responseData));
+                });
+            } catch (error) {
+                console.error('Erro ao buscar produtos:', error);
+            }
+        };
     </script>
 
     <footer>
