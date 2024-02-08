@@ -12,13 +12,16 @@ function gerarToken(clienteId) {
 
 const verificarToken = (req, res, next) => {
     // Verificar se o token está presente nos cabeçalhos da solicitação
-    const token = req.headers['authorization'];
-    if (!token) {
+    const header = req.headers['authorization'];
+    if (!header || !header.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Token não fornecido.' });
     }
 
+    // Extrair o token do header
+    const token = header.split(' ')[1];
+
     // Verificar se o token é válido
-    jwt.verify(token, 'sua_chave_secreta', (err, decoded) => {
+    jwt.verify(token, segredo, (err, decoded) => {
         if (err) {
             return res.status(403).json({ message: 'Token inválido.' });
         }

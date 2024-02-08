@@ -37,7 +37,7 @@ async function criarTabelaProduto() {
                 nome VARCHAR(50) NOT NULL,
                 descricao VARCHAR(400) NOT NULL,
                 valor NUMERIC(10,2),
-                imagem VARCHAR(4000)
+                imagem VARCHAR(4000))
         `;
         await pool.query(createTableQuery);
         console.log('Tabela produto criada com sucesso!');
@@ -47,4 +47,47 @@ async function criarTabelaProduto() {
     }
 } 
 
-module.exports = { listarProdutos };
+
+const cadastrarProduto = async (req, res) => {
+
+    const { nome } = req.body;
+    const { descricao } = req.body;
+    const { valor } = req.body;
+    const { url } = req.body;
+
+    try {
+
+        const checkTableQuery = `
+            SELECT EXISTS (
+                SELECT 1
+                FROM information_schema.tables 
+                WHERE table_name = 'produto'
+            )
+        `;
+        const tableCheckResult = await pool.query(checkTableQuery);
+        const tableExists = tableCheckResult.rows[0].exists;
+
+        if (!tableExists) {
+            await criarTabelaProduto();
+        }
+
+        console.log(nome)
+
+        const query = `
+            INSERT INTO produto (nome, descricao, valor, imagem)
+            VALUES ($1, $2, $3, $4)
+        `;
+        const values = [ nome, descricao, valor, url];
+
+        await pool.query(query, values);
+        console.log('Produto criado com sucesso!');
+        
+        res.status(201).json({ message: 'Produto criado com sucesso.' });
+    } catch (error) {
+        console.log(error)
+        console.error('Erro ao cadastrar Produto:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+};
+
+module.exports = { listarProdutos, cadastrarProduto };

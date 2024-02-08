@@ -2,12 +2,9 @@ const express = require('express');
 const { connectToDatabase } = require('./database');
 const { cadastrarCliente } = require('./public/controller/clienteController');
 const { login } = require('./public/controller/clienteController');
-const { listarProdutos } = require('./public/controller/produtoController');
-const { listarCarrinho } = require('./public/controller/carrinhoController');
-const { salvarCarrinho } = require('./public/controller/carrinhoController');
-const { verificarToken } = require('./public/js/token');
-
-
+const { listarProdutos, cadastrarProduto } = require('./public/controller/produtoController');
+const { listarCarrinho, salvarCarrinho } = require('./public/controller/carrinhoController');
+const { realizarPagamento } = require('./public/controller/pagamentoController');
 
 const app = express();
 
@@ -15,11 +12,16 @@ const app = express();
 app.use(express.json());
 
 // Rotas
-app.post('/cliente', cadastrarCliente);
 app.post('/login', login);
-app.post('/produto', verificarToken, listarProdutos);
-app.post('/carrinho', verificarToken, salvarCarrinho);
-app.post('/listarCarrinho', verificarToken, listarCarrinho);
+app.post('/cadastrarCliente', cadastrarCliente);
+
+app.post('/listarProdutos', listarProdutos);
+app.post('/cadastrarProduto', cadastrarProduto);
+
+app.post('/salvarCarrinho', salvarCarrinho);
+app.post('/listarCarrinho', listarCarrinho);
+
+app.post('/realizarPagamento', realizarPagamento);
 
 app.use(express.static(__dirname + '/public'));
   

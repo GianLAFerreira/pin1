@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IBuy</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    </head>
+
+    <body class="align-items-center justify-content-center">
+        <nav
+            class="navbar navbar-dark bg-dark align-top w-100 rounded">
+            <!-- Container para centralizar horizontalmente -->
+            <div class="container d-flex justify-content-center">
+                <div class="align-items-center">
+                    <a class="navbar-brand" href="home.html">
+                        <img src="assets/home.png" width="30" height="30" alt="">
+                    </a>
+                    <a class="navbar-brand" href="carrinho.html">
+                        <img src="assets/shopping-cart.png" width="30" height="30" alt="">
+                    </a>
+                    <a class="navbar-brand" href="home.html">
+                        <img src="assets/history.png" width="30" height="30" alt="">
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-brand" href="home.html">
+                <img src="assets/logout.png" id="modalOpener" width="30" height="30" alt="">
+            </a>
+        </nav>
+
+        <section>
+            <div class="container text-center mb-5 mb-md-0 mb-lg-4 mb-xl-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-row align-items-center">
+                        <h4 class="text-uppercase mt-1">IBUY</h4>
+                        <span class="ms-2 me-3">Pagamentos</span>
+                    </div>
+                    <a href="home.html" class="text-decoration-none">Cancelar e retornar ao site</a>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div
+                            class="col-md-7 col-lg-7 col-xl-6 mb-4 mb-md-0">
+                            <!-- Conteúdo dinâmico dos produtos -->
+                            <div
+                                id="listaProdutos"><!-- Os produtos serão adicionados aqui dinamicamente -->
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-lg-4 col-xl-4 offset-lg-1 offset-xl-1">
+                            <div class="p-3" style="background-color: #eee;">
+                                <span class="fw-bold">Recapitulação do pedido</span>
+                                <!-- Conteúdo da recapitulação do pedido -->
+                                <div class="d-flex justify-content-between mt-2">
+                                    <!-- Valor inicial, será atualizado dinamicamente -->
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <span>Total</span>
+                                    <span class="text-success" id="somaValores"></span>
+                                    <!-- Aqui será exibida a soma dos valores -->
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-row mt-1"></div>
+                                <div class="d-flex flex-row align-items-center text-primary">
+                                    <span class="ms-1">Adicionar cartão de pagamento</span>
+                                </div>
+                            </div>
+                            <p>
+                                A reclamação de seguro e todas as dependências necessárias serão submetidas à sua seguradora para a parte coberta deste pedido.
+                            </p>
+                            <div class="d-flex flex-column mb-3">
+                                <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                                    <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off"/>
+                                    <label class="btn btn-outline-primary btn-lg" for="option1">
+                                        <div class="d-flex justify-content-between">
+                                            <span>VISA
+                                            </span>
+                                            <span>**** 5436</span>
+                                        </div>
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off" checked/>
+                                    <label class="btn btn-outline-primary btn-lg" for="option2">
+                                        <div class="d-flex justify-content-between">
+                                            <span>MASTER CARD
+                                            </span>
+                                            <span>**** 5038</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="btn btn-success btn-lg btn-block" id="btn-realizar-pagamento">Realizar pagamento</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </section>
+
+        <footer>
+            <div class="text-center p-3">
+                © 2024 Copyright
+            </div>
+        </footer>
+
+        <script>
+            window.onload = async () => {
+                try { // Recupera a lista de produtos do localStorage
+                    const carrinho = JSON.parse(localStorage.getItem('carrinho'));
+                    const listaProdutos = document.getElementById('listaProdutos');
+                    let somaValores = 0;
+                    // Definindo a variável fora do loop
+
+                    // Verifica se existem produtos no carrinho
+                    if (carrinho && carrinho.length > 0) { // Itera sobre os produtos e cria elementos HTML para cada um
+                        carrinho.forEach(produto => { // Cria um novo elemento div para cada produto
+                            const col = document.createElement('div');
+                            col.className = 'col-md-7 col-lg-7 col-xl-6 mb-4 mb-md-0';
+
+                            // Cria um elemento h5 para exibir o valor do produto
+                            const valorProduto = document.createElement('h5');
+                            valorProduto.className = 'mb-0 text-success';
+                            valorProduto.textContent = `$${
+                                produto.valor
+                            }`;
+                            col.appendChild(valorProduto);
+
+                            // Cria um elemento h5 para exibir o nome do produto
+                            const nomeProduto = document.createElement('h5');
+                            nomeProduto.className = 'mb-3';
+                            nomeProduto.textContent = produto.nome;
+                            col.appendChild(nomeProduto);
+
+                            // Cria um elemento p para exibir a descrição do produto
+                            const descricaoProduto = document.createElement('p');
+                            descricaoProduto.textContent = produto.descricao;
+                            col.appendChild(descricaoProduto);
+
+                            // Cria uma linha horizontal para separar os produtos
+                            const hr = document.createElement('hr');
+                            col.appendChild(hr);
+
+                            // Adiciona o valor do produto à soma total, convertendo para número antes
+                            somaValores += Number(produto.valor);
+
+                            // Adiciona o elemento do produto à lista de produtos na página
+                            listaProdutos.appendChild(col);
+                        });
+
+                        // Verifica o tipo de dado da variável somaValores
+                        console.log(typeof somaValores);
+
+                        // Atualiza o elemento que exibe a soma dos valores
+                        const elementoSoma = document.getElementById('somaValores');
+                        elementoSoma.textContent = `$${
+                            somaValores.toFixed(2)
+                        }`;
+                    } else { // Se não houver produtos no carrinho, exibe uma mensagem indicando isso
+                        const semProdutos = document.createElement('p');
+                        semProdutos.textContent = 'Não há produtos no carrinho.';
+                        listaProdutos.appendChild(semProdutos);
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar produtos:', error);
+                }
+
+                document.getElementById('btn-realizar-pagamento').addEventListener('click', async () => {
+                try {
+                    const userID = localStorage.getItem('userId')
+                    // Enviar uma solicitação POST para o servidor para realizar o pagamento
+                    const response = await fetch('/realizarPagamento', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        // Se necessário, você pode enviar dados adicionais no corpo da solicitação
+                        body: JSON.stringify({ 
+                            cliente_id: userID 
+                        })
+                    });
+
+                    if (response.ok) {
+                        // Se a solicitação for bem-sucedida (status 200), você pode fazer algo aqui
+                                // Emitir um alerta ao clicar no botão
+                        alert('Pagamento realizado com sucesso!');
+                        // Remover um item específico do localStorage pelo nome da chave
+                        localStorage.removeItem('carrinho');
+                        console.log('Pagamento realizado com sucesso.');
+                        // Redirecionar para outra página após o alerta (substitua 'outra-pagina.html' pela URL da página de destino)
+                        window.location.href = 'home.html';
+                        
+                    } else {
+                        // Se a solicitação falhar, trate o erro aqui
+                        console.error('Erro ao realizar o pagamento:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Erro ao realizar o pagamento:', error);
+                }
+            });
+            };
+        </script>
+    </body>
+</html></body></html>

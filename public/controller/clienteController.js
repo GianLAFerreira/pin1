@@ -13,13 +13,8 @@ const login = async (req, res) => {
         const result = await pool.query(query, values);
         
         if (result.rowCount >  0) {
-            const clienteId = result.rows[0].id;
-            const token = gerarToken(clienteId);
-
-            // Armazenar o token em um cookie
-            res.cookie('token', token, { httpOnly: true });
-
-            res.status(201).json({ message: 'Login realizado com sucesso.', token  });
+            const id = result.rows[0].id;
+            res.status(201).json({ message: 'Login realizado com sucesso.', id  });
         } else {
             res.status(401).json({ message: 'Email ou senha incorretos.' });
         }

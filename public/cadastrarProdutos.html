@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"  rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark align-top w-100 rounded">
+        <!-- Container para centralizar horizontalmente -->
+        <div class="container d-flex justify-content-center">
+            <div class="align-items-center">
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/home.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="carrinho.html">
+                    <img src="assets/shopping-cart.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/history.png" width="30" height="30" alt="">
+                </a>
+            </div>
+        </div>
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/logout.png" id="modalOpener" width="30" height="30" alt="">
+        </a>
+    </nav>
+
+
+    <section class="order-form m-4">
+        <div class="container pt-4">
+            <div class="row">
+                <div class="col-12 px-4">
+                    <h1 class="display-4 text-center">Cadastro de Produtos</h1>
+                    <p class="text-center text-muted">
+                        <small>Por favor insira os dados para o cadastro</small>
+                    </p>
+                </div>
+                <form id="form-cadastro">
+                    <div id="messages"></div>
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="nome">* Nome</label>
+                        <input type="text" id="nome" class="form-control" maxlength="50" required="true"/>
+                    </div>
+
+                    <!-- Password input -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="descricao">* Descricao</label>
+                        <input type="text" id="descricao" class="form-control" maxlength="400"/>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="valor">* Valor</label>
+                        <input type="number" id="valor" class="form-control" step="0.01" required="true"/>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="url">* URL</label>
+                        <input type="url" id="url" placeholder="Adicione o link da imagem" class="form-control" required="true"/>
+                    </div>
+                    
+                    <div class="d-grid text-center">
+                        <a id="btn-cadastrar" class="btn btn-dark btn-active-secondary" data-mdb-ripple-init="true">Cadastrar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+
+        window.onload = function () {
+            document.getElementById('messages').style.display = 'none';
+        };
+
+
+        document.getElementById('btn-cadastrar').addEventListener('click', async () => {
+
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const valor = document.getElementById('valor').value;
+            const url = document.getElementById('url').value;
+
+            const data = {
+                nome,
+                descricao,
+                valor,
+                url
+            };
+
+            const msgs = validarCampos(data);
+
+            if (msgs.length > 0) {
+                const errorMessage = msgs.join('<br>'); // Use <br> para que cada mensagem apareça em uma linha separada
+                mensagemTelaErro(errorMessage);
+                return;
+            }
+
+            try {
+                const response = await fetch('/cadastrarProduto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data) // Envie os dados coletados no front-end
+                });
+                const responseData = await response.json();
+
+                document.getElementById('messages').textContent = 'Cadastro concluído com sucesso.';
+                document.getElementById('messages').classList.add('alert', 'alert-success');
+
+                document.getElementById('form-cadastro').reset();
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+
+        function validarCampos(data) {
+            const mensagens = [];
+
+            if (! data.nome) {
+                mensagens.push('O campo Nome é obrigatório');
+            }
+
+            if (! data.descricao) {
+                mensagens.push('O campo Descrição é obrigatório');
+            }
+
+            if (! data.valor) {
+                mensagens.push('O campo Valor é obrigatório');
+            }
+
+            if (! data.url) {
+                mensagens.push('O campo URL é obrigatório');
+            }
+
+            return mensagens;
+        }
+
+        function mensagemTelaErro(mensagem) {
+            document.getElementById('messages').innerHTML = mensagem;
+            document.getElementById('messages').style.display = 'block';
+            document.getElementById('messages').classList.add('alert', 'alert-danger');
+        }
+    </script>
+</body>
+</html>

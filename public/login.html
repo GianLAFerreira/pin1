@@ -38,7 +38,7 @@
 
                     <div class="text-center mt-4">
                         <p class="text-center text-muted"><small>Ainda não possui uma conta? <a
-                                    href="criar-conta.html" class="text-muted">Criar conta</a></small></p>
+                                    href="criarConta.html" class="text-muted">Criar conta</a></small></p>
                     </div>
                 </form>
             </div>
@@ -77,13 +77,25 @@
                     body: JSON.stringify(data),
                 });
 
+                const responseData = await response.json();
+
+                if (response.ok) {
+                    // Login bem-sucedido, armazenar o ID do usuário no localStorage
+                    localStorage.setItem('userId', responseData.id);
+
+                    // Redirecionar para outra página, se necessário
+                    window.location.href = '/pagina-de-sucesso.html';
+                } else {
+                    // Exibir mensagem de erro, se houver
+                    const errorMessage = responseData.message || 'Erro ao fazer login.';
+                    mensagemTelaErro(errorMessage);
+                }
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     mensagemTelaErro(errorData.message);
                     throw new Error(errorData.message || 'Ocorreu um erro durante o login.');
                 }
-
-                const responseData = await response.json();
                
                 if (response.status === 201) { // Checking for status 201
                     window.location.href = "http://localhost:3000/home.html";

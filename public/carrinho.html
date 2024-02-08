@@ -47,17 +47,27 @@
                 </div>
             </div>
         </div>
+
+        <div class="d-grid text-center" onclick="openPagamento()">
+            <a id="btn-comprar" class="btn btn-dark btn-active-secondary" data-mdb-ripple-init="true">Realizar compra</a>
+        </div>
     </section>
 
     <script>
+        function openPagamento() {
+            window.location.href = 'pagamento.html';
+        }
          window.onload = async () => {
         try {
+            const userID = localStorage.getItem('userId')
             const response = await fetch('/listarCarrinho', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(),
+                body: JSON.stringify({
+                    cliente_id: userID
+                }),
             });
             const responseData = await response.json();
             const listaProdutos = document.getElementById('listaProdutos');
@@ -109,9 +119,9 @@
                 dFlex2.className = 'd-flex justify-content-center mt-auto';
                 cardBody.appendChild(dFlex2);
 
-               
+                listaProdutos.appendChild(col);
 
-            listaProdutos.appendChild(col);
+                localStorage.setItem('carrinho', JSON.stringify(responseData));
                     });
                 } catch (error) {
                     console.error('Erro ao buscar produtos:', error);
