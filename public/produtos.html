@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBuy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body class="align-items-center justify-content-center">
+    <nav class="navbar navbar-dark bg-dark align-top w-100 rounded">
+        <!-- Container para centralizar horizontalmente -->
+        <div class="container d-flex justify-content-center">
+            <div class="align-items-center">
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/home.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="carrinho.html">
+                    <img src="assets/shopping-cart.png" width="30" height="30" alt="">
+                </a>
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/history.png" width="30" height="30" alt="">
+                </a>
+            </div>
+        </div>
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/logout.png" id="modalOpener" width="30" height="30" alt="">
+        </a>
+    </nav>
+
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-4">
+                    <div class="card text-black" id="listaProdutos" style="background-color: #eee ; border: none;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="text-center p-3">
+            © 2024 Copyright
+        </div>
+    </footer>
+
+    <script>
+        window.onload = async () => {
+
+        try {
+            const getCookie = (name) => {
+            const cookieName = `${name}=`;
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const cookieArray = decodedCookie.split(';');
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookie = cookieArray[i];
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+            return '';
+                };
+            const token = getCookie('token');
+            console.log(token);
+
+            const response = await fetch('/produto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(),
+            });
+            const responseData = await response.json();
+            const listaProdutos = document.getElementById('listaProdutos');
+
+            // Iterar sobre os produtos e adicionar cada um ao HTML
+            responseData.forEach(produto => {
+                const col = document.createElement('div');
+                col.className = 'col mb-4';
+
+                const card = document.createElement('div');
+                card.className = 'card text-black h-100';
+                col.appendChild(card);
+
+                const img = document.createElement('img');
+                img.src = produto.imagem;
+                img.className = 'card-img-top';
+                // Estilos inline para limitar a largura da imagem e manter a proporção
+                img.style.height = 'auto'; // Mantém a proporção da imagem
+                card.appendChild(img);
+
+
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body d-flex flex-column';
+                card.appendChild(cardBody);
+
+                const title = document.createElement('h5');
+                title.className = 'card-title';
+                title.textContent = produto.nome;
+                cardBody.appendChild(title);
+
+                const description = document.createElement('p');
+                description.className = 'text-muted mb-4';
+                description.textContent = produto.descricao;
+                cardBody.appendChild(description);
+
+                const dFlex = document.createElement('div');
+                dFlex.className = 'd-flex justify-content-between mt-auto';
+                cardBody.appendChild(dFlex);
+
+                const span1 = document.createElement('span');
+                span1.textContent = 'Valor';
+                dFlex.appendChild(span1);
+
+                const span2 = document.createElement('span');
+                span2.textContent = `$${produto.valor}`;
+                dFlex.appendChild(span2);
+
+                const dFlex2 = document.createElement('div');
+                dFlex2.className = 'd-flex justify-content-center mt-auto';
+                cardBody.appendChild(dFlex2);
+
+                const comprarButton = document.createElement('button');
+                comprarButton.className = 'btn btn-dark btn-active-secondary';
+                comprarButton.textContent = 'Comprar';
+                comprarButton.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/carrinho', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            nome: produto.nome,
+                            descricao: produto.descricao,
+                            valor: produto.valor,
+                            imagem: produto.imagem
+                        }),
+                    });
+                    const data = await response.text();
+                    alert(data); // Exibe a mensagem do servidor
+                } catch (error) {
+                    console.error('Erro ao adicionar produto ao carrinho:', error);
+                }
+            });
+            dFlex2.appendChild(comprarButton);
+
+            listaProdutos.appendChild(col);
+                    });
+                } catch (error) {
+                    console.error('Erro ao buscar produtos:', error);
+                }
+            };
+    </script>
+</body>

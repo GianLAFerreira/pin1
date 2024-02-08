@@ -1,6 +1,7 @@
 const { pool } = require('../../database');
+const { gerarToken } = require('../js/token');
 
-const loginCliente = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { emailCliente } = req.body;
         const {  senhaCliente } = req.body;
@@ -9,13 +10,16 @@ const loginCliente = async (req, res) => {
         const query = `
         SELECT * FROM cliente WHERE email = $1 AND senha = $2;
     `;
-
-        // Executando a consulta
         const result = await pool.query(query, values);
         
-        // Verificando se o resultado contém pelo menos um registro
         if (result.rowCount >  0) {
-            res.status(201).json({ message: 'Login realizado com sucesso.' });
+            const clienteId = result.rows[0].id;
+            const token = gerarToken(clienteId);
+
+            // Armazenar o token em um cookie
+            res.cookie('token', token, { httpOnly: true });
+
+            res.status(201).json({ message: 'Login realizado com sucesso.', token  });
         } else {
             res.status(401).json({ message: 'Email ou senha incorretos.' });
         }
@@ -55,6 +59,7 @@ const cadastrarCliente = async (req, res) => {
 
         if (!tableExists) {
             await criarTabelaCliente();
+            await criarTabelaProduto();
         }
 
         const query = `
@@ -101,4 +106,4 @@ async function criarTabelaCliente() {
     }
 }
 
-module.exports = { cadastrarCliente, loginCliente };
+module.exports = { cadastrarCliente, login };
