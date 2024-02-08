@@ -2,8 +2,8 @@ const express = require('express');
 const { connectToDatabase } = require('./database');
 const { cadastrarCliente } = require('./public/controller/clienteController');
 const { login } = require('./public/controller/clienteController');
-const { listarProdutos, cadastrarProduto } = require('./public/controller/produtoController');
-const { listarCarrinho, salvarCarrinho } = require('./public/controller/carrinhoController');
+const { listarProdutos, cadastrarProduto, isFornecedor } = require('./public/controller/produtoController');
+const { listarCarrinho, salvarCarrinho, salvarCartao, obterCartoes} = require('./public/controller/carrinhoController');
 const { realizarPagamento } = require('./public/controller/pagamentoController');
 
 const app = express();
@@ -15,11 +15,15 @@ app.use(express.json());
 app.post('/login', login);
 app.post('/cadastrarCliente', cadastrarCliente);
 
+app.post('/isFornecedor', isFornecedor);
 app.post('/listarProdutos', listarProdutos);
 app.post('/cadastrarProduto', cadastrarProduto);
 
 app.post('/salvarCarrinho', salvarCarrinho);
 app.post('/listarCarrinho', listarCarrinho);
+app.post('/salvarCartao', salvarCartao);
+app.post('/obterCartoes', obterCartoes);
+
 
 app.post('/realizarPagamento', realizarPagamento);
 

@@ -64,7 +64,7 @@ const cadastrarCliente = async (req, res) => {
         const values = [primeiroNome, sobrenome, email, cpfcnpj, rua, numero, bairro, municipio, uf, cep, senha, isFornecedor];
 
         await pool.query(query, values);
-        console.log('Conta criada comsucesso!');
+        console.log('Conta criada com sucesso!');
         
         res.status(201).json({ message: 'Conta criada com sucesso.' });
     } catch (error) {

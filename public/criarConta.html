@@ -191,6 +191,8 @@
                     const responseData = await response.json();
 
                     document.getElementById('messages').textContent = 'Cadastro concluído com sucesso.';
+                    document.getElementById('messages').style.display = 'block';
+                    document.getElementById('messages').classList.remove('alert', 'alert-danger');
                     document.getElementById('messages').classList.add('alert', 'alert-success');
 
                     document.getElementById('form-cadastro').reset();
@@ -221,7 +223,7 @@
                 }
 
                 if (! data.cpfcnpj) {
-                    mensagens.push('O campo CPF é obrigatório');
+                    mensagens.push('O campo CPF/CNPJ é obrigatório');
                 }
 
                 if (! data.rua) {
